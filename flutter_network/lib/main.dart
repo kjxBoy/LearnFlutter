@@ -1,5 +1,13 @@
+import 'dart:io';
+
+import 'package:dio/adapter.dart';
+import 'package:dio_proxy_plugin/dio_proxy_plugin.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
+
+import 'MovieItem.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,42 +32,60 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
   final String title;
-  
-  
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  static final Dio dio = Dio();
-  
-  void _incrementCounter() {
+  static final Dio dio = Dio()
+    ..options.baseUrl = "https://httpbin.org/"
+    ..httpClientAdapter = HttpProxyAdapter(ipAddr: 'localhost', port: 8888);
 
+  void _incrementCounter() {
       getNetworkData().then((response) {
-          print(response);
+          if (kDebugMode) {
+
+            final movieItem = movieItemFromJson(response.toString());
+            print(movieItem.subjectCollectionItems?.first);
+
+          }
           setState(() {
             _counter++;
           });
       });
-
-      // dio.get("https://httpbin.org/get").then((value) {
-      //   print(value);
-      //   setState(() {
-      //     _counter++;
-      //   });
-      // }).catchError((err){
-      //   print(err);
-      // });
   }
 
   Future<Response> getNetworkData() async {
-    var result = await dio.get("https://httpbin.org/get").then((value) {
-     return value;
-    });
+    if (kDebugMode) {
+      print("测试proxy");
+      //获取系统代理
+      String deviceProxy = '';
+      try {
+        deviceProxy = await DioProxyPlugin.deviceProxy;
+      } on PlatformException {
+        deviceProxy = '';
+        print('Failed to get system proxy.');
+      }
+      if (deviceProxy.isNotEmpty) {
+        var arrProxy = deviceProxy.split(':');
 
-    return result;
+        //设置dio proxy
+        var httpProxyAdapter = HttpProxyAdapter(
+            ipAddr: arrProxy[0],
+            port: int.tryParse(arrProxy[1])!
+        );
+        dio.httpClientAdapter = httpProxyAdapter;
+      }
+    }
+
+    var response = await dio.get("/get?a=2", queryParameters:{"id":12,"name":"wendu"}).then((value) {
+      return value;
+    });
+    return response;
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -69,20 +95,6 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
