@@ -1,12 +1,8 @@
-import 'dart:io';
 
-import 'package:dio/adapter.dart';
 import 'package:dio_proxy_plugin/dio_proxy_plugin.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter/services.dart';
-
+import 'MovieRequest.dart';
 import 'MovieItem.dart';
 
 void main() {
@@ -39,51 +35,14 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  static final Dio dio = Dio()
-    ..options.baseUrl = "https://httpbin.org/"
-    ..httpClientAdapter = HttpProxyAdapter(ipAddr: 'localhost', port: 8888);
-
+  
   void _incrementCounter() {
-      getNetworkData().then((response) {
-          if (kDebugMode) {
-
-            final movieItem = movieItemFromJson(response.toString());
-            print(movieItem.subjectCollectionItems?.first);
-
-          }
-          setState(() {
-            _counter++;
-          });
+    MovieRequest.getNetworkData().then((response) {
+        print(response.subjectCollectionItems?.first);
+        setState(() {
+          _counter++;
+        });
       });
-  }
-
-  Future<Response> getNetworkData() async {
-    if (kDebugMode) {
-      print("测试proxy");
-      //获取系统代理
-      String deviceProxy = '';
-      try {
-        deviceProxy = await DioProxyPlugin.deviceProxy;
-      } on PlatformException {
-        deviceProxy = '';
-        print('Failed to get system proxy.');
-      }
-      if (deviceProxy.isNotEmpty) {
-        var arrProxy = deviceProxy.split(':');
-
-        //设置dio proxy
-        var httpProxyAdapter = HttpProxyAdapter(
-            ipAddr: arrProxy[0],
-            port: int.tryParse(arrProxy[1])!
-        );
-        dio.httpClientAdapter = httpProxyAdapter;
-      }
-    }
-
-    var response = await dio.get("/get?a=2", queryParameters:{"id":12,"name":"wendu"}).then((value) {
-      return value;
-    });
-    return response;
   }
 
 

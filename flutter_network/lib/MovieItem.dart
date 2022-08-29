@@ -341,7 +341,7 @@ class SubjectCollectionItem {
 
   @override
   String toString() {
-    return 'SubjectCollectionItem{cardSubtitle: $cardSubtitle}';
+    return 'SubjectCollectionItem{cardSubtitle: $cardSubtitle, title: $title, info: $info}';
   }
 }
 
