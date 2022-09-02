@@ -12,6 +12,7 @@ class MovieRequest {
     ..httpClientAdapter = HttpProxyAdapter(ipAddr: 'localhost', port: 8888);
 
   static Future<MovieItem> getNetworkData() async {
+    // 主要为了抓包
     if (kDebugMode) {
       print("测试proxy");
       //获取系统代理
@@ -35,7 +36,6 @@ class MovieRequest {
     }
 
     var response = await dio.get("/get?a=2").then((response) {
-      print(response.data);
       final movieItem = movieItemFromJson(response.data.toString());
       return movieItem;
     });

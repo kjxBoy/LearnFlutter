@@ -1,0 +1,6 @@
+framework module dio_proxy_plugin {
+  umbrella header "dio_proxy_plugin-umbrella.h"
+
+  export *
+  module * { export * }
+}

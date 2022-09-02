@@ -1,9 +1,9 @@
-
 import 'package:dio_proxy_plugin/dio_proxy_plugin.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'MovieRequest.dart';
 import 'MovieItem.dart';
+import 'movie_itemView.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,43 +34,32 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  
-  void _incrementCounter() {
-    MovieRequest.getNetworkData().then((response) {
-        print(response.subjectCollectionItems?.first);
-        setState(() {
-          _counter++;
-        });
-      });
-  }
+  final List<SubjectCollectionItem> movies = [];
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    MovieRequest.getNetworkData().then((movieItem) {
+      setState(() {
+        movies.addAll(movieItem.subjectCollectionItems ?? []);
+        print(movies);
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    return Scaffold(body: buildListView());
+  }
+
+  ListView buildListView() {
+    return ListView.builder(
+      itemCount: movies.length,
+      itemBuilder: (context, index) {
+        final item = movies[index];
+        return JXMovieItemView(movie: item);
+      },
     );
   }
 }
