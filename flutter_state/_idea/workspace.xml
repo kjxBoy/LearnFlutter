@@ -6,9 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="10f1d795-f0e8-4a63-8aea-c82100eab9ce" name="Changes" comment="">
       <change afterPath="$PROJECT_DIR$/../flutter_network/lib/movie_itemView.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../flutter_router/lib/_route_basic.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/Provider/_counter_ViewModel.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/Provider/_provider_basic.dart" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/_InheritedWidget.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/provider.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/provider_route.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../flutter_network/lib/MovieItem.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_network/lib/MovieItem.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../flutter_network/lib/MovieRequest.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_network/lib/MovieRequest.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../flutter_network/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_network/lib/main.dart" afterDir="false" />
@@ -27,6 +28,14 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="ProjectId" id="2EBwmZQKXpmtaV2RhbOAttCCeT9" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -50,6 +59,11 @@
     <property name="io.flutter.reload.alreadyRun" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="show.migrate.to.gradle.popup" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/lib/Provider" />
+    </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -78,5 +92,6 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>

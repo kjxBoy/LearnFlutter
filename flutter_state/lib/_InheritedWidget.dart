@@ -1,6 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_state/Provider/_counter_ViewModel.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(const MyApp());
+
+
+/**
+ * 1.创建自己需要共享的数据
+ * 2.在应用程序的顶层ChangeNotifierProvider
+ * 3.在其它位置使用共享的数据
+ *  > Provider.of: 当Provider中的数据发生改变时, Provider.of所在的Widget整个build方法都会重新构建
+ *  > Consumer(相对推荐): 当Provider中的数据发生改变时, 执行重新执行Consumer的builder
+ *  > Selector: 1.selector方法(作用,对原有的数据进行转换) 2.shouldRebuild(作用,要不要重新构建)
+ */
+
+void main() {
+  runApp(
+    // 2.在应用程序的顶层ChangeNotifierProvider
+      ChangeNotifierProvider<JXCounterViewModel>(
+        create: (ctx) {
+          return JXCounterViewModel();
+        },
+        child: const MyApp(),
+      )
+  );
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -12,30 +35,21 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
           primarySwatch: Colors.blue, splashColor: Colors.transparent),
-      home: HYHomePage(),
+      home: const HYHomePage(),
     );
   }
 }
 
-class HYHomePage extends StatefulWidget {
+class HYHomePage extends StatelessWidget {
   const HYHomePage({Key? key}) : super(key: key);
-
-  @override
-  _HYHomePageState createState() => _HYHomePageState();
-}
-
-class _HYHomePageState extends State<HYHomePage> {
-  int _counter = 100;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("InheritedWidget"),
-      ),
-      body: HYCounterWidget(
-        counter: _counter,
-        child: Center(
+        appBar: AppBar(
+          title: const Text("列表测试"),
+        ),
+        body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -44,77 +58,61 @@ class _HYHomePageState extends State<HYHomePage> {
             ],
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () {
-          setState(() {
-            _counter++;
-          });
-        },
-      ),
+        floatingActionButton: Selector<JXCounterViewModel, JXCounterViewModel>(
+          selector: (ctx, counterVM) => counterVM,
+          shouldRebuild: (prev, next) => false,
+          builder: (ctx, counterVM, child) {
+            print("floatingActionButton build方法被执行");
+            return FloatingActionButton(
+              child: child,
+              onPressed: () {
+                counterVM.counter += 1;
+              },
+            );
+          },
+          child: const Icon(Icons.add),
+        )
     );
   }
 }
 
-
-
-class HYShowData01 extends StatefulWidget {
-  @override
-  _HYShowData01State createState() => _HYShowData01State();
-}
-
-class _HYShowData01State extends State<HYShowData01> {
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    print("执行了_HYShowData01State中的didChangeDependencies");
-  }
+class HYShowData01 extends StatelessWidget {
+  const HYShowData01({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    int? counter = HYCounterWidget.of(context)?.counter;
+    // 3.在其它位置使用共享的数据
+    int counter = Provider.of<JXCounterViewModel>(context).counter;
 
-    return Card(
-      color: Colors.red,
-      child: Text("当前计数: $counter", style: const TextStyle(fontSize: 30),),
+    print("data01的build方法");
+
+    return Container(
+      color: Colors.blue,
+      child: Column(
+        children: <Widget>[
+          Text("当前计数: $counter", style: TextStyle(fontSize: 30),),
+        ],
+      ),
     );
   }
 }
 
 class HYShowData02 extends StatelessWidget {
+  const HYShowData02({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    int? counter = HYCounterWidget.of(context)?.counter;
+
+    print("data02的build方法");
 
     return Container(
-      color: Colors.blue,
-      child: Text("当前计数: $counter", style: const TextStyle(fontSize: 30),),
+      color: Colors.red,
+      child: Consumer<JXCounterViewModel>(
+        builder: (ctx, counterVM, child) {
+          print("data02 Consumer build方法被执行");
+          return Text("当前计数: ${counterVM.counter}", style: TextStyle(fontSize: 30),);
+        },
+      ),
     );
-  }
-}
-
-/*
-* 创建InheritedWidget， 用来做父widget，子类的widget可以通过context找到InheritedWidget实例，
-* 使用其中的数据
-* */
-class HYCounterWidget extends InheritedWidget {
-  // 1.共享的数据
-  final int? counter;
-
-  // 2.定义构造方法
-  const HYCounterWidget({Key? key,this.counter, required Widget child}): super(key: key,child: child);
-
-  // 3.获取组件最近的当前InheritedWidget
-  static HYCounterWidget? of(BuildContext context) {
-    // 沿着Element树, 去找到最近的HYCounterElement, 从Element中取出Widget对象
-    return context.dependOnInheritedWidgetOfExactType();
-  }
-
-  // 4.决定要不要回调State中的didChangeDependencies
-  // 如果返回true: 执行依赖当期的InheritedWidget的State中的didChangeDependencies
-  @override
-  bool updateShouldNotify(HYCounterWidget oldWidget) {
-    return oldWidget.counter != counter;
   }
 }
