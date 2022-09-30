@@ -3,7 +3,7 @@
 export "FLUTTER_ROOT=/Users/shenxuejian/flutter"
 export "FLUTTER_APPLICATION_PATH=/Users/shenxuejian/Desktop/LearnFlutter/flutter_state"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
-export "FLUTTER_TARGET=/Users/shenxuejian/Desktop/LearnFlutter/flutter_state/lib/main.dart"
+export "FLUTTER_TARGET=/Users/shenxuejian/Desktop/LearnFlutter/flutter_state/lib/_InheritedWidget.dart"
 export "FLUTTER_BUILD_DIR=build"
 export "FLUTTER_BUILD_NAME=1.0.0"
 export "FLUTTER_BUILD_NUMBER=1"

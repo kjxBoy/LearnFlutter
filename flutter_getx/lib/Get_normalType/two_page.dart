@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'main.dart';
+import '../main.dart';
 
 
 class GetJumpTwoLogic extends GetxController {
@@ -9,15 +9,18 @@ class GetJumpTwoLogic extends GetxController {
 
   @override
   void onReady() {
-    var map = Get.arguments;
-    msg = map;
-    update();
+    // var map = Get.arguments;
+    // msg = map;
+    // update();
 
     super.onReady();
   }
 }
 
 class GetJumpTwoPage extends StatelessWidget {
+
+  static const String routeName = "/page";
+
   /// find 是明显的查询操作
   final oneLogic = Get.find<GetJumpOneLogic>();
   /// put 是添加操作

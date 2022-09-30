@@ -52,7 +52,7 @@ class HYHomePage extends StatelessWidget {
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
+            children: const <Widget>[
               HYShowData01(),
               HYShowData02()
             ],

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_getx/two_page.dart';
 import 'package:get/get.dart';
+import 'package:get/get_navigation/src/router_report.dart';
+
+import 'Get_normalType/two_page.dart';
 
 class GetJumpOneLogic extends GetxController {
   var count = 0;
 
   jumpToVc() {
-    Get.toNamed(GetJumpOnePage.routeName, arguments: "这是传递的数据");
+    Get.toNamed(GetJumpTwoPage.routeName, arguments: "这是传递的数据");
   }
 
   increase() {
@@ -15,17 +17,17 @@ class GetJumpOneLogic extends GetxController {
   }
 }
 
-void main() => runApp(GetMaterialApp(
+void main() => runApp(
+    GetMaterialApp(
       getPages: [
-        GetPage(
-            name: GetJumpOnePage.routeName, page: () => GetJumpTwoPage()),
+        GetPage(name: GetJumpTwoPage.routeName, page: () => GetJumpTwoPage()),
         GetPage(name: "/", page: () => GetJumpOnePage()),
       ],
       initialRoute: "/",
+      navigatorObservers: [GetXRouterObserver()],
     ));
 
 class GetJumpOnePage extends StatelessWidget {
-  static const String routeName = "/page";
   final logic = Get.put(GetJumpOneLogic());
   GetJumpOnePage({Key? key}) : super(key: key);
 
@@ -36,7 +38,14 @@ class GetJumpOnePage extends StatelessWidget {
           title: const Text("跨页面-One"),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: logic.jumpToVc,
+          // logic.jumpToVc,
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) {
+                return GetJumpTwoPage();
+              }),
+            );
+          },
           child: const Icon(Icons.arrow_forward_outlined),
         ),
         body: Center(child: GetBuilder<GetJumpOneLogic>(
@@ -47,5 +56,19 @@ class GetJumpOnePage extends StatelessWidget {
             );
           },
         )));
+  }
+}
+
+/// 将GetX的GetController进行释放管理
+///自定义这个关键类！！！！！！
+class GetXRouterObserver extends NavigatorObserver {
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    RouterReportManager.reportCurrentRoute(route);
+  }
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) async {
+    RouterReportManager.reportRouteDispose(route);
   }
 }
